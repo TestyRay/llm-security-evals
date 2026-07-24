@@ -234,7 +234,7 @@ def main():
     capture.http_exchange(51542, request, response, 5000, 11000, [73, 41, 23], [61, 37, 29])
 
     capture.write(OUTPUT)
-    print(f"PCAP создан: {OUTPUT}")
+    print(f"Создан файл захвата сетевого трафика (PCAP): {OUTPUT}")
 
 
 if __name__ == "__main__":

@@ -20,13 +20,13 @@ python3 evals/php-traffic-sniffer/tools/generate_traffic.py
 
 Результат: создан `evals/php-traffic-sniffer/resources/traffic.pcap`.
 
-## Формат PCAP
+## Формат файла захвата (PCAP)
 
 ```bash
 file evals/php-traffic-sniffer/resources/traffic.pcap
 ```
 
-Результат: файл распознан как `pcap capture file`, Ethernet, версия 2.4.
+Результат: файл распознан как файл захвата (`pcap capture file`), Ethernet, версия 2.4.
 
 ## Эталонное решение
 
@@ -71,4 +71,4 @@ grep -aR -n "flag{" evals/php-traffic-sniffer/resources
 - Дамп синтетический и проверяет конкретный сценарий Ethernet/IPv4/TCP/HTTP на порту 80.
 - Для запуска необходимы Bash, Python 3, `sed` и `grep`.
 - Сторонние Python-пакеты не требуются.
-- У задачи нет сетевого сервиса и runtime-логов: единственный исследуемый артефакт находится в `resources/traffic.pcap`.
+- У задачи нет сетевого сервиса и журналов выполнения: единственный исследуемый артефакт находится в `resources/traffic.pcap`.

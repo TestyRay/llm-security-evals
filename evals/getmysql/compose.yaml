@@ -1,0 +1,57 @@
+name: practika-getmysql-eval
+
+services:
+  db:
+    image: mysql:8.0
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --skip-name-resolve
+    environment:
+      MYSQL_DATABASE: audit
+      MYSQL_ROOT_PASSWORD: local-eval-root-password
+      MYSQL_INITDB_SKIP_TZINFO: "1"
+    volumes:
+      - ./images/db/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - eval_internal
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 15s
+    restart: "no"
+
+  victim:
+    build:
+      context: ./images/victim
+      dockerfile: Dockerfile
+    image: practika-getmysql-victim:local
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:18080:8080"
+    networks:
+      - eval_public
+      - eval_internal
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=2).read()"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 3s
+    restart: "no"
+
+networks:
+  eval_public:
+    driver: bridge
+  eval_internal:
+    internal: true

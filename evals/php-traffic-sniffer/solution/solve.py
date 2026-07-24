@@ -29,7 +29,7 @@ def xor_bytes(data, key):
 def read_pcap_packets(path):
     raw = Path(path).read_bytes()
     if len(raw) < 24:
-        raise ValueError("файл PCAP слишком короткий")
+        raise ValueError("файл захвата сетевого трафика (PCAP) слишком короткий")
 
     magic = raw[:4]
     if magic == b"\xd4\xc3\xb2\xa1":
@@ -37,7 +37,7 @@ def read_pcap_packets(path):
     elif magic == b"\xa1\xb2\xc3\xd4":
         endian = ">"
     else:
-        raise ValueError("неподдерживаемая сигнатура PCAP")
+        raise ValueError("неподдерживаемая сигнатура файла захвата (PCAP)")
 
     offset = 24
     while offset + 16 <= len(raw):
@@ -153,7 +153,7 @@ def extract_flag(pcap_path, php_path):
         break
 
     if response_body is None:
-        raise ValueError("целевой обмен с webshell не найден")
+        raise ValueError("целевой обмен с веб-оболочкой (webshell) не найден")
 
     md5_frame = hashlib.md5((pass_name + key).encode()).hexdigest()
     prefix = md5_frame[:16].encode()
